@@ -66,7 +66,7 @@ class RanorexLibrary(object):
             maxim = True
         Ranorex.Host.Local.RunApplication(appname, arguments, workingDirectory, maxim)
 
-    def close_application(self, ranorexpath, gracePeriod = "0"):
+    def close_application(self, ranorexpath, gracePeriod = 0):
         """ Closes an application that contains a specified UI element.
 
         This keyword looks for a UI element specified by a RanoreXPath and tries to close the parent process of this element.
@@ -80,9 +80,8 @@ class RanorexLibrary(object):
         | `Close Application` | /winapp[@packagename='Microsoft.WindowsCalculator'] |  |
         | `Close Application` | /winapp[@packagename='Microsoft.WindowsCalculator']//button[@automationid='num1Button'] | 300 |
         """
-        self._log("Closing application with element " + ranorexpath + " within " + gracePeriod + "ms.")
-        intGracePeriod = int(gracePeriod)
-        return Ranorex.Host.Current.CloseApplication(ranorexpath, intGracePeriod)
+        self._log("Closing application with element " + ranorexpath + " within " + str(gracePeriod) + "ms.")
+        return Ranorex.Host.Current.CloseApplication(ranorexpath, gracePeriod)
 
     def click(self, ranorexpath, location = "Center", mousebutton = "Left", duration = "Ranorex.Mouse.DefaultMoveTime", count = "1"):
         """ Performs a mouse click on a UI element.
@@ -301,7 +300,7 @@ class RanorexLibrary(object):
         intGracePeriod = int(gracePeriod)
         return Ranorex.Host.Current.CloseApplication(ranorexpath, intGracePeriod)
 
-    def wait_for(self, ranorexpath, duration = 30000):
+    def wait_for(self, ranorexpath, duration = "30000"):
         """ Waits for an element to exist.
 
         Since Ranorex doesn't know how to wait for something implicitely in many cases, this has to be done explicitely. A very typical example would be to wait for a UI element to come into existance (often due to the UI being fully loaded).
