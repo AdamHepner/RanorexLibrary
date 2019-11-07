@@ -369,7 +369,7 @@ class RanorexLibrary(object):
         self._log("Type key sequence \"" + value + "\" into element " + ranorexpath)
         Ranorex.Unknown(ranorexpath).PressKeys(value)
 
-    def validate_attribute_equal(self, ranorexpath, attribute, value):
+    def validate_attribute_equal(self, ranorexpath, attribute, value, type_cast=str):
         """Validates that an attribute is equal to the specified value.
 
         Since a Ranorex Validation action requires a repository item to work on, this keyword is a simple version implemented directly in python. Therefore its functionality might not be on par with the Ranorex validations.
@@ -377,6 +377,7 @@ class RanorexLibrary(object):
         :param ranorexpath: The RanoreXPath of the element that the validation works on.
         :param attribute: The attribute that should be validated.
         :param value: The value that the attribute should be validated against.
+        :param type_cast: The type of the attribute. Defaults to str
 
         :raises: AsstionError if the validation fails.
 
@@ -384,9 +385,9 @@ class RanorexLibrary(object):
         | `Validate Attribute Equal` | /form[@controlname='RxMainFrame']/?/?/tabpage[@controlname='RxTabIntroduction']/text[@controlname='lblWelcomeMessage'] | ControlText | Welcome, Dr. Strange! |
         """
         #Problem is: the ranorex validation action needs a repo item to work on, so I have to do it manually.
-        varToVal = Ranorex.Unknown(ranorexpath).GetAttributeValue[str](attribute)
+        varToVal = Ranorex.Unknown(ranorexpath).GetAttributeValue[type_cast](attribute)
         if not varToVal == value:
-            raise AssertionError("Elements are not equal. Expected " + value + ", but got " + varToVal + " instead.")
+            raise AssertionError("Elements are not equal. Expected " + str(value) + ", but got " + str(varToVal) + " instead.")
 
     def validate_attribute_not_equal(self, ranorexpath, attribute, value):
         """ Validates that an attribute is not equal to the specified value.
