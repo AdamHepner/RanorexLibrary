@@ -6,6 +6,13 @@ from distutils.util import strtobool
 from robot.api import logger
 import time
 
+type_casting = {
+        "str": str,
+        "int": int,
+        "bool": bool,
+        "float": float,
+    }
+
 class RanorexLibrary(object):
     """ The RanorexLibrary main object.
 
@@ -26,12 +33,7 @@ class RanorexLibrary(object):
 
     _logLevel = "INFO"
 
-    type_casting = {
-        "str": str,
-        "int": int,
-        "bool": bool,
-        "float": float,
-    }
+    
 
     # TODO: parameterize Ranorex options below
     def __init__(self, pathToRanorex = "C:\\Program Files (x86)\\Ranorex\\Studio\\Bin"):
