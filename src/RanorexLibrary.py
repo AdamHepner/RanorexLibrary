@@ -26,6 +26,14 @@ class RanorexLibrary(object):
 
     _logLevel = "INFO"
 
+    type_casting = {
+        "str": str,
+        "int": int,
+        "bool": bool,
+        "float": float,
+    }
+
+    # TODO: parameterize Ranorex options below
     def __init__(self, pathToRanorex = "C:\\Program Files (x86)\\Ranorex\\Studio\\Bin"):
         import setupRanorexLibrary
         setupRanorexLibrary.importDlls(pathToRanorex)
@@ -321,11 +329,12 @@ class RanorexLibrary(object):
         if not elementFound:
             raise AssertionError('Element hasn\'t been found within the specified timeout of ' + duration + 'ms: ' + ranorexpath)
 
-    def get_attribute_value(self, ranorexpath, attribute):
+    def get_attribute_value(self, ranorexpath, attribute, type_cast="str"):
         """ Returns an attribute value of a UI element as string.
 
         :param ranorexpath: RanoreXPath of the element that the attribute is read from.
         :param attribute: The attribute value that should be read.
+        :param type_cast: The type of the attribute. Defaults to str
 
         :returns: The value of the attribute as string value.
 
@@ -333,7 +342,7 @@ class RanorexLibrary(object):
         | ${retValue} | `Get Attribute Value` | /winapp[@packagename='Microsoft.WindowsCalculator']/?/?/text[@automationid='CalculatorResults']/container[@automationid='textContainer'] | Caption |
         """
         self._log("Get the value of the attribute " + attribute + " from element " + ranorexpath + ".")
-        return Ranorex.Unknown(ranorexpath).GetAttributeValue[str](attribute)
+        return Ranorex.Unknown(ranorexpath).GetAttributeValue[type_casting[type_cast]](attribute)
 
     def set_attribute_value(self, ranorexpath, attribute, value):
         """ Sets an attribute value of a UI element.
@@ -369,7 +378,7 @@ class RanorexLibrary(object):
         self._log("Type key sequence \"" + value + "\" into element " + ranorexpath)
         Ranorex.Unknown(ranorexpath).PressKeys(value)
 
-    def validate_attribute_equal(self, ranorexpath, attribute, value, type_cast=str):
+    def validate_attribute_equal(self, ranorexpath, attribute, value, type_cast="str"):
         """Validates that an attribute is equal to the specified value.
 
         Since a Ranorex Validation action requires a repository item to work on, this keyword is a simple version implemented directly in python. Therefore its functionality might not be on par with the Ranorex validations.
@@ -385,16 +394,16 @@ class RanorexLibrary(object):
         | `Validate Attribute Equal` | /form[@controlname='RxMainFrame']/?/?/tabpage[@controlname='RxTabIntroduction']/text[@controlname='lblWelcomeMessage'] | ControlText | Welcome, Dr. Strange! |
         """
         #Problem is: the ranorex validation action needs a repo item to work on, so I have to do it manually.
-        varToVal = Ranorex.Unknown(ranorexpath).GetAttributeValue[type_cast](attribute)
+        varToVal = Ranorex.Unknown(ranorexpath).GetAttributeValue[type_casting[type_cast]](attribute)
         if not varToVal == value:
             raise AssertionError("Elements are not equal. Expected " + str(value) + ", but got " + str(varToVal) + " instead.")
 
-    def validate_attribute_not_equal(self, ranorexpath, attribute, value):
+    def validate_attribute_not_equal(self, ranorexpath, attribute, value, type_cast="str"):
         """ Validates that an attribute is not equal to the specified value.
 
         See in the validate_attribute_equal keyword for a documentation is these two keywords are the same apart from a small "not".
         """
-        varToVal = Ranorex.Unknown(ranorexpath).GetAttributeValue[str](attribute)
+        varToVal = Ranorex.Unknown(ranorexpath).GetAttributeValue[type_casting[type_cast]](attribute)
         if varToVal == value:
             raise AssertionError("Elements are equal, although they shouldn't be. Expected and actual value: " + value)
 
