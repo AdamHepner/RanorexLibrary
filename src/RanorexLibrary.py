@@ -123,7 +123,7 @@ class RanorexLibrary(object):
         return "System.Windows.Forms.MouseButtons." + mousebutton
 
     def _normalizeLocation(self, location):
-        return "Ranorex.Location." + location
+        return "Ranorex.Location.Parse(" + location +")"
 
     def _click(self, ranorexpath, location, mousebutton, duration, count):
         mousebutton = self._normalizeMouseButton(mousebutton)
